@@ -1,0 +1,6 @@
+# Run `npm run setup` to generate a fresh local signing secret.
+MEDIA_TOKEN_SECRET=replace-with-a-random-secret-of-at-least-32-characters
+
+# Optional: use an independent DTK instance instead of the public demo.
+# DTK_API_BASE=https://your-parser.example.com
+# DTK_API_KEY=your-server-side-api-key
