@@ -63,6 +63,25 @@ test("stream ranking prefers clean streams, then resolution, then bitrate", asyn
   const ticket = await verifyToken(result.video.mediaToken, secret, "media");
   assert.deepEqual(ticket.urls, ["https://a.douyinvod.com/high"]);
 });
+test("Douyin zjcdn streams produce a valid ticket with CDN backups", async () => {
+  const urls = ["https://v5-dy-ov-experiment.zjcdn.com/video.mp4", "https://v3-dy-o.zjcdn.com/video.mp4", "https://www.douyin.com/aweme/v1/play/"];
+  const result = await shapeVideo({ ...content, media: { video: { url: urls[0], urls, width: 1080, height: 1920, watermark: false } } }, source, config);
+  assert.equal(result.status, "ready");
+  if (result.status !== "ready") return;
+  assert.deepEqual((await verifyToken(result.video.mediaToken, secret, "media")).urls, urls);
+});
+test("valid backup URLs survive missing or unsupported primary addresses", async () => {
+  for (const primary of [undefined, "https://unsupported.example/video.mp4"]) {
+    const result = await shapeVideo({ ...content, media: { video: {
+      url: primary, urls: ["https://127.0.0.1/private", "https://v3-dy-o.zjcdn.com/video.mp4", "https://v3-dy-o.zjcdn.com/video.mp4", "http://a.douyinvod.com/video.mp4"],
+      width: 1080, height: 1920, watermark: false,
+    } } }, source, config);
+    assert.equal(result.status, "ready");
+    if (result.status !== "ready") return;
+    assert.equal(result.video.width, 1080);
+    assert.deepEqual((await verifyToken(result.video.mediaToken, secret, "media")).urls, ["https://v3-dy-o.zjcdn.com/video.mp4"]);
+  }
+});
 test("asynchronous polling reads the same task without resubmitting the original parse", async () => {
   const calls: string[] = [];
   mock.method(globalThis, "fetch", async (url: string, options: RequestInit) => {
@@ -83,7 +102,7 @@ test("upstream rate limits are explicit service-wide blocking errors", async () 
   await assert.rejects(parseVideo(source, config), error => !!error && typeof error === "object" && "serviceBlocked" in error && error.serviceBlocked === true);
 });
 test("media proxy never accepts local hosts or deceptive suffixes", () => {
-  for (const url of ["http://a.douyinvod.com/x", "https://localhost/x", "https://127.0.0.1/x", "https://169.254.169.254/x", "https://douyinvod.com.evil.test/x", "https://user:pass@a.douyinvod.com/x"]) assert.equal(isMediaUrl(url), false);
+  for (const url of ["http://a.douyinvod.com/x", "https://localhost/x", "https://127.0.0.1/x", "https://169.254.169.254/x", "https://douyinvod.com.evil.test/x", "https://user:pass@a.douyinvod.com/x", "https://zjcdn.com.evil.test/x", "https://notzjcdn.com/x", "https://user:pass@v3-dy-o.zjcdn.com/x"]) assert.equal(isMediaUrl(url), false);
 });
 test("every redirect is validated before following it", async () => {
   let calls = 0;

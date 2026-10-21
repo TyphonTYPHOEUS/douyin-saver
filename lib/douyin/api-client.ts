@@ -72,7 +72,8 @@ export async function shapeVideo(data: ObjectValue, source: string, config: ApiC
   const expectedId = requestedId(source);
   if (!/^\d{1,32}$/.test(contentId) || (expectedId && contentId !== expectedId)) throw new ServiceError("返回的作品与请求不一致，已停止处理。", "CONTENT_MISMATCH", 422);
   const media = object(data.media);
-  const candidates = [media.video, ...(Array.isArray(media.streams) ? media.streams : [])].map(object).filter(stream => isMediaUrl(stream.url));
+  const candidates = [media.video, ...(Array.isArray(media.streams) ? media.streams : [])].map(object)
+    .filter(stream => [stream.url, ...(Array.isArray(stream.urls) ? stream.urls : [])].some(isMediaUrl));
   const rank = (stream: ObjectValue) => (stream.watermark === false ? 2 : stream.watermark === true ? 0 : 1);
   candidates.sort((a, b) => rank(b) - rank(a) || positive(b.width) * positive(b.height) - positive(a.width) * positive(a.height) || positive(b.bitrate) - positive(a.bitrate));
   const stream = candidates[0];

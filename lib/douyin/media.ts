@@ -1,6 +1,6 @@
 import { ServiceError } from "./errors.ts";
 
-const SUFFIXES = ["douyinvod.com", "douyin.com", "bytecdn.cn", "byteimg.com", "byteimg.cn", "pstatp.com", "bytedance.com", "ibytedtos.com", "bytevcloudcdn.com", "amemv.com", "snssdk.com", "zijieapi.com"];
+const SUFFIXES = ["douyinvod.com", "douyin.com", "bytecdn.cn", "byteimg.com", "byteimg.cn", "pstatp.com", "bytedance.com", "ibytedtos.com", "bytevcloudcdn.com", "amemv.com", "snssdk.com", "zijieapi.com", "zjcdn.com"];
 export const MAX_VIDEO_BYTES = 200 * 1024 * 1024;
 
 export function isMediaUrl(value: unknown): value is string {
