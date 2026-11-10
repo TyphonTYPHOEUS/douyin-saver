@@ -1,6 +1,6 @@
 {
   "name": "douyin-saver",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "engines": {
     "node": ">=22.13.0"
@@ -12,12 +12,15 @@
     "start": "node --import ./scripts/sites-env.mjs ./node_modules/wrangler/bin/wrangler.js dev --config dist/server/wrangler.json --local --persist-to .wrangler/state --ip 127.0.0.1 --inspector-port 0",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
     "test": "node --experimental-strip-types --test tests/*.test.ts",
+    "test:browser": "playwright test",
     "typecheck": "tsc --noEmit",
     "setup": "node scripts/setup-local.mjs",
     "deploy:cloudflare": "node scripts/deploy-cloudflare.mjs"
   },
   "dependencies": {
+    "@mediabunny/aac-encoder": "1.65.2",
     "lucide-react": "^1.31.0",
+    "mediabunny": "1.65.2",
     "next": "16.3.4",
     "react": "19.2.6",
     "react-dom": "19.2.6"
@@ -25,6 +28,7 @@
   "devDependencies": {
     "@cloudflare/vite-plugin": "1.37.1",
     "@cloudflare/workers-types": "4.20260515.1",
+    "@playwright/test": "1.65.0",
     "@types/node": "22.19.19",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
@@ -46,7 +50,7 @@
       "sharp": "0.35.4"
     }
   },
-  "description": "拾影：可独立部署的抖音视频批量下载网站",
+  "description": "拾影：抖音视频批量下载与浏览器本地四宫格配乐剪辑",
   "license": "MIT",
   "repository": {
     "type": "git",

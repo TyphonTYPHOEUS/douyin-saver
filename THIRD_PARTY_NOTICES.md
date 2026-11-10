@@ -6,6 +6,14 @@ The application uses React, Vinext, Vite, Cloudflare tooling, Lucide and other p
 
 DTK (https://douyin.wtf/) is an independent external REST service. Its source code is not included in this repository.
 
+## Browser media processing
+
+The optional browser editor uses **Mediabunny 1.65.2** and **@mediabunny/aac-encoder 1.65.2**, distributed under the Mozilla Public License 2.0. Their unmodified upstream source and license are available at https://github.com/Vanilagy/mediabunny/tree/v1.65.2 and in the installed packages. Application files in this repository remain MIT-licensed; these dependencies retain their own licenses.
+
+The AAC encoder extension includes a reduced FFmpeg build under LGPL-2.1-or-later, without GPL components. Its build scripts, corresponding source references and license notices are provided by the upstream package at https://github.com/Vanilagy/mediabunny/tree/v1.65.2/packages/aac-encoder. The extension is loaded only when a native AAC encoder is unavailable. Native WebCodecs implementations are supplied by the user's browser and operating system.
+
+Playwright is a development-only browser testing dependency, licensed under Apache-2.0. Tests generate their own synthetic media; no personal music or downloaded creator videos are distributed.
+
 ## OpenAI build support
 
 MIT License

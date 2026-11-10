@@ -56,9 +56,12 @@ export default defineConfig(async ({ command }) => {
       ...(managedLinux
         ? { host: "0.0.0.0", allowedHosts: ["terminal.local"] }
         : {}),
-      ...(isCodexSeatbeltSandbox
-        ? { watch: { useFsEvents: false, usePolling: true } }
-        : {}),
+      watch: {
+        ...(isCodexSeatbeltSandbox ? { useFsEvents: false, usePolling: true } : {}),
+        // Playwright traces include HTML snapshots. Watching them would reload
+        // the app during a render and invalidate the very flow being tested.
+        ignored: ["**/.browser-test/**", "**/playwright-report/**", "**/test-results/**"],
+      },
     },
     plugins: [
       vinext(),
